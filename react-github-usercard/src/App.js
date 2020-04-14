@@ -2,53 +2,60 @@ import React from 'react';
 import { Component } from 'react';
 
 import './App.css';
+import styled from 'styled-components';
+
+import UserCard from './components/UserCard';
+import Followers from './components/Followers';
 
 class App extends Component {
    constructor() {
       super();
       this.state = {
          users: [],
+         followers: []
       };
-
    }
 
    componentDidMount() {
-      // console.log('Component did mount!');
+      console.log('Component did mount!');
 
       fetch(`https://api.github.com/users/bdrummo6`)
          .then(results => results.json())
          .then(users => {
-            // console.log('users: ', users);
+            console.log('users: ', users);
             this.setState({ users: users });
          })
          .catch(err => {
             console.log('Error: ', err)
          });
+
+      fetch(`https://api.github.com/users/bdrummo6/followers`)
+         .then(results => results.json())
+         .then(follows => {
+            console.log('followers: ', follows);
+            this.setState({ followers: follows });
+         })
+         .catch(err => {
+            console.log('Errors: ', err)
+         });
    }
 
-
    render() {
-
-      let userState = this.state.users;
+      const App = styled.div`
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+         background: lightblue;
+         color: navy;
+      `;
 
       return (
-         <div className='App'>
+         <App>
             <h1>Github UserCard</h1>
-            <div className='usercard'>
-               <h3>{userState.name}</h3>
-               <div className='avatar'>
-                  <img src={userState.avatar_url} alt={userState.avatar_url} key={userState.avatar_url} />
-               </div>
-               <div className='userData'>
-                  <p><span>Username:</span> {userState.login}</p>
-                  <p><span>ID:</span> {userState.id}</p>
-                  <p><span>URL:</span> <a href={userState.html_url}>{userState.html_url}</a></p>
-                  <p><span>Repos:</span> {userState.public_repos}</p>
-                  <p><span>Followers:</span> {userState.followers}</p>
-                  <p><span>Following:</span> {userState.following}</p>
-               </div>
-            </div>
-         </div>
+            <UserCard user={this.state.users}/>
+            <Followers followers={this.state.followers} />
+         </App>
       )
    }
 }
