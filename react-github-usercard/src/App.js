@@ -48,7 +48,8 @@ class App extends Component {
          background: lightblue;
          color: navy;
       `;
-
+       
+      document.title = 'React Github Usercard';
       return (
          <App>
             <h1>Github UserCard</h1>
